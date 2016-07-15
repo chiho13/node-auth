@@ -1,0 +1,23 @@
+{
+  "name": "auth",
+  "version": "1.0.0",
+  "description": "simple node authentication example",
+  "main": "app.js",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "mongoose": "^4.5.4",
+    "express": "^4.14.0",
+    "jade": "^1.11.0"
+  },
+  "devDependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "mongoose": "^4.5.4",
+    "node-sass": "^3.8.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "rdegges - Anthony (learner)",
+  "license": "ISC"
+}

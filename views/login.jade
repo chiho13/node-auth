@@ -1,0 +1,23 @@
+extends base
+
+block vars
+  - var title = 'Login'
+block body
+  div.container
+    h1.center Log Into Your Account
+
+    if error
+      div.alert.alert-danger
+        p ERROR: #{error}
+
+    form.col-md-6.center(method="post")
+
+      span Email:
+      input.form-control(type="email", name="email", required=true)
+      br
+
+      span Password:
+      input.form-control(type="password", name="password", required=true)
+      br
+
+      input.btn(type="submit")
