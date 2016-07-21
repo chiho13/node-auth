@@ -1,0 +1,11 @@
+HTTP/1.1 302 Found
+X-Powered-By: Express
+Location: /dashboard
+Vary: Accept
+Content-Type: text/html; charset=utf-8
+Content-Length: 64
+Set-Cookie: session=ojHcEUjGmln_GQ5WMyYgAw.YT-Zy2AyI5lCP3Z7EKG50-X1OJF4e5FXwDokXoTXAVizMT-S4wXiQsMqwugqnFPpc-UVwH3ZBjVvgzZHeuq1iM4bAC75Xzm9evIzmZZU5tqfoOJ6hPkEPqlUUdSPezt28EFM3mMMSWIDzXLhNReDnlnRV74snbWSOaNu41aGidmMBnPB2p2_0Y-dn-U762RRlJ81gqY5sDPs0Krj-MgqcA.1468594331358.1800000.xetBCiOHxRBbrqvrGYzPghdyuaN6KWmDQdWWrXN4g74; path=/; expires=Fri, 15 Jul 2016 15:22:12 GMT; httponly
+Date: Fri, 15 Jul 2016 14:53:19 GMT
+Connection: keep-alive
+
+

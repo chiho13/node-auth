@@ -9,8 +9,9 @@ block body
   if error
     p ERROR: #{error}
 
-  form.container.col-md-6(method="post")
-
+  form.justify(method="post")
+    input(type="hidden", name="_csrf", value=csrfToken)
+    
     span First Name:
     input.form-control(type="text", name="firstName", required=true)
     br

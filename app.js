@@ -1,8 +1,11 @@
 'use strict'
 
 var bodyParser = require('body-parser');
+var bcrypt = require('bcryptjs');
+var csurf = require('csurf');
 var express = require('express');
 var mongoose = require('mongoose');
+var sessions = require('client-sessions');
 
 var Schema = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
@@ -26,21 +29,61 @@ app.locals.pretty = true;
 
 //middleware
 app.use(bodyParser.urlencoded({ extended: true}));
+app.use( express.static('css') );
+
+app.use(sessions({
+  cookieName: 'session',
+  secret: '38hfwhfsefh38hh8hf83hwhfwh389hrhsd',
+  duration: 30 * 60 * 1000,
+  activeDuration: 5 * 60 * 1000,
+  httpOnly: true, //dont let browser javascript access cookies ever
+  ephemeral: true //delete this cookie when the browser is closed
+}));
+
+app.use(csurf());
+
+
+//custom middleware
+
+app.use(function(req, res, next) {
+  if(req.session && req.session.user) {
+    User.findOne({ email: req.session.user.email}, function(err, user){
+      if(user) {
+        req.user = user;
+        delete req.user.password;
+        req.session.user = req.user;
+        res.locals.user = req.user;
+      }
+     next();
+    })
+  } else {
+    next();
+  }
+});
+
+function requireLogin(req, res, next) {
+  if(!req.user) {
+    res.redirect('/login');
+  } else {
+    next();
+  }
+}
 
 app.get('/', function(req, res) {
   res.render('index.jade');
 });
 
 app.get('/register', function(req, res){
-  res.render('register.jade');
+  res.render('register.jade', {csrfToken: req.csrfToken()}); //creates CSRF token
 });
 
 app.post('/register', function(req, res){
+  var hash = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10));
   var user = new User({
     firstName: req.body.firstName,
     lastName: req.body.lastName,
     email: req.body.email,
-    password: req.body.password
+    password: hash
   });
   user.save(function(err) {
     if(err) {
@@ -55,9 +98,8 @@ app.post('/register', function(req, res){
   });
 });
 
-
 app.get('/login', function(req, res){
-  res.render('login.jade');
+  res.render('login.jade', {csrfToken: req.csrfToken()});
 });
 
 app.post('/login', function(req, res){
@@ -65,7 +107,8 @@ app.post('/login', function(req, res){
     if (!user) {
       res.render('login.jade', {error: "invalid email or password"});
     } else {
-      if (req.body.password === user.password) {
+      if (bcrypt.compareSync(req.body.password, user.password)) {
+        req.session.user = user; // set-cookie: session={}
         res.redirect('/dashboard');
       } else {
         res.render('login.jade', {error: "invalid email or password"});
@@ -74,11 +117,16 @@ app.post('/login', function(req, res){
   })
 });
 
-app.get('/dashboard', function(req, res){
+app.get('/dashboard', requireLogin, function(req, res){
   res.render('dashboard.jade');
 });
 
+app.get('/profile', requireLogin, function(req, res){
+  res.render('profile.jade');
+});
+
 app.get('/logout', function(req, res){
+  req.session.reset();
   res.redirect('/');
 });
 

@@ -4,14 +4,14 @@ block vars
   - var title = 'Login'
 block body
   div.container
-    h1.center Log Into Your Account
+    h1.center.main-title Log Into Your Account
 
     if error
       div.alert.alert-danger
         p ERROR: #{error}
-
-    form.col-md-6.center(method="post")
-
+    
+    form(method="post")
+      input(type="hidden", name="_csrf", value=csrfToken)
       span Email:
       input.form-control(type="email", name="email", required=true)
       br
